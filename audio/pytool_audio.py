@@ -1,5 +1,5 @@
 # 语音处理中，音频常用参数计算
-
+import math as mt
 
 # 计算声道信息下对应样点数
 def get_samples_of_audio(sr, ch_num, frame_s):
@@ -60,4 +60,57 @@ def br_to_bytes(kbps, frame_ms):
     bits = br_to_bits(kbps, frame_ms)
     byte_num = bit_to_byte(bits)
     return byte_num
+
+
+"""
+幅值到分贝相互转换dB/dBFS
+profit: 收益
+invest: 本金
+day:    投入天数
+return: 年利率收益
+"""
+
+# 常量定义
+BIT_DEPTH_I16 = 16
+BIT_DEPTH_I24 = 24
+BIT_DEPTH_I32 = 32
+BIT_DEPTH_F32 = -32
+VAL2LOG_COEF  = 20
+LOG_POW_BASE  = 10
+
+
+# 根据位深获取最大幅值
+def get_sample_ref_val(bit_depth):
+# 仅支持整型16/24/32位和浮点32位位深
+    ref_val = 0
+    if bit_depth == BIT_DEPTH_F32:         # float32
+        ref_val = 1.0
+    elif ((bit_depth == BIT_DEPTH_I16) or   # int16
+          (bit_depth == BIT_DEPTH_I24) or   # int24
+          (bit_depth == BIT_DEPTH_I32)):    # int32
+        ref_val = 2 ** (bit_depth - 1) - 1
+    else:
+        print('not supported bitdepth =', bit_depth)
+        return -1
+    return ref_val
+
+
+# dBFS到采样值
+def dbfs_to_sample(db, bit_depth):
+    # assumed that bit_depth is verfied
+    ref_val = get_sample_ref_val(bit_depth)
+    sample = pow(LOG_POW_BASE, db / VAL2LOG_COEF) * ref_val
+    return sample
+
+
+# 采样值到dBFS
+def sample_to_dbfs(sample, bit_depth):
+    # assumed that bit_depth is verfied
+    ref_val = get_sample_ref_val(bit_depth)
+    sample_clip = min(abs(sample), ref_val)
+    ratio = sample_clip / ref_val
+    dBFS = VAL2LOG_COEF * mt.log(ratio, LOG_POW_BASE)
+    return dBFS
+
+
 
