@@ -19,3 +19,6 @@ db = -78.27
 dbfs = pyaudio.sample_to_dbfs(sp, bit_depth)
 sample = pyaudio.dbfs_to_sample(db, bit_depth)
 print('sample: {0:0.2f}, dBFS: {1:0.2f}'.format(sample, dbfs))
+val = pyaudio.db_to_sample(6)
+db = pyaudio.sample_to_db(val)
+print('sample: {0:0.2f}, dB: {1:0.2f}'.format(val, db))

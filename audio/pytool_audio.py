@@ -64,10 +64,10 @@ def br_to_bytes(kbps, frame_ms):
 
 """
 幅值到分贝相互转换dB/dBFS
-profit: 收益
-invest: 本金
-day:    投入天数
-return: 年利率收益
+bit_depth: 位深
+VAL2LOG_COEF: 幅值到能量缩放系数
+LOG_POW_BASE: 对数变换的底
+return: db/dbfs/val
 """
 
 # 常量定义
@@ -112,5 +112,12 @@ def sample_to_dbfs(sample, bit_depth):
     dBFS = VAL2LOG_COEF * mt.log(ratio, LOG_POW_BASE)
     return dBFS
 
+# db到采样值
+def db_to_sample(db):
+    val = pow(LOG_POW_BASE, db / VAL2LOG_COEF)
+    return val
 
-
+# 采样值到db
+def sample_to_db(val):
+    db = VAL2LOG_COEF * mt.log(val, LOG_POW_BASE)
+    return db
