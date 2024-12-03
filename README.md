@@ -8,6 +8,12 @@
 - utils，存放自用提效脚本工具，可供外部调用
 
 
+TBD
+- 拆分audio为param和db
+    - calc_param
+    - sp2db
+
+
 
 ## 工具函数集
 

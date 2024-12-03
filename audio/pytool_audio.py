@@ -62,6 +62,19 @@ def br_to_bytes(kbps, frame_ms):
     return byte_num
 
 
+# 基础参数定义
+BITS_ONE_BYTE = 8
+BITS_ONE_WORD = 64
+BYTES_ONE_WORD = BITS_ONE_WORD / BITS_ONE_BYTE
+
+# 最大码率到最大比特数，圆整用
+def get_max_bytes(br, frame_ms):
+    max_bits = br * frame_ms
+    max_words_ceil = mt.ceil(max_bits / BITS_ONE_WORD)
+    max_bytes_ceil = max_words_ceil * BYTES_ONE_WORD
+    return max_bytes_ceil
+
+
 """
 幅值到分贝相互转换dB/dBFS
 bit_depth: 位深
